@@ -1,6 +1,6 @@
-# Snipe bot 2.0.0a discordpy
+# Discord Snipe bot 
 
-Basic 2 commands that spits out the most recently deleted message using discord.py 1.7.3
+Basic 2 commands that spits out the most recently deleted message using discord.py 2.0.0a
 
 <h2> Commands </h2>
 
