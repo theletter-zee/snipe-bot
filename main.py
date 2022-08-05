@@ -5,6 +5,7 @@ from discord.ext import commands
 
 import os
 from dotenv import load_dotenv
+from webserver import keep_alive
 
 load_dotenv() #As the name suggets, it loads the dotenv file that contains the bot's token
 TOKEN = os.getenv('TOKEN') # "os.getenv()" looks for the TOKEN key in the .env and uses the value (the bot's token) 
@@ -80,5 +81,5 @@ async def snipeedit(ctx):  #Same concept as snipe
     snipe_ed.set_footer(text=f"Deleted in {channel}")
     await ctx.send(embed=snipe_ed)
 
-
+keep_alive()
 bot.run(TOKEN)
