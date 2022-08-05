@@ -53,7 +53,7 @@ async def snipe(ctx):
     snipe_em = discord.Embed(description=contents,
                              color=discord.Color.blurple(),
                              timestamp=time)
-    snipe_em.set_author(name=target, icon_url=target.display_avatar.url)
+    snipe_em.set_author(name=target, icon_url=target.avatar_url)
 
     if attch: #If an attachment is found (img/video) then it will adjust to the embed accordingly.
         if attch[0].proxy_url.endswith('mp4'):
@@ -69,14 +69,14 @@ async def snipe(ctx):
 @bot.command()
 async def snipeedit(ctx):  #Same concept as snipe
     try:
-        contents, author, channel, time = sniped_edit[ctx.channel.id]
+        contents, target, channel, time = sniped_edit[ctx.channel.id]
     except KeyError:
         return await ctx.send("No recent edits found")
 
     snipe_ed = discord.Embed(description=contents,
                              color=discord.Color.blurple(),
                              timestamp=time)
-    snipe_ed.set_author(name=author, icon_url=author.display_avatar.url)
+    snipe_ed.set_author(name=target, icon_url=target.avatar_url)
     snipe_ed.set_footer(text=f"Deleted in {channel}")
     await ctx.send(embed=snipe_ed)
 
