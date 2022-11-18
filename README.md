@@ -12,7 +12,8 @@ The main purpose of this bot is to spit out a silly message someone might've sen
 
 `snipeedit`
 
-<h2> Support Server </h2>
+<h2> Need Help? (Support Server) </h2>
 
+If you need help setting this up, you can ask on the support server
 https://discord.gg/k3mF2nhX3K
 
