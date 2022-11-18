@@ -15,5 +15,5 @@ The main purpose of this bot is to spit out a silly message someone might've sen
 <h2> Need Help? (Support Server) </h2>
 
 If you need help setting this up, you can ask on the support server
-https://discord.gg/k3mF2nhX3K
+https://discord.gg/k3mF2nhX3K (You are not obligated to stay, you can leave as soon as you get help, there's no real reason to stay in the server besides that lol)
 
