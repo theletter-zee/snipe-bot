@@ -1,4 +1,4 @@
-#Snipe bot using discord.py 2.0.0a
+#Snipe bot using discord.py 2.0
 
 import discord
 from discord.ext import commands
