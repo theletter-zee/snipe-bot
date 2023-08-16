@@ -29,17 +29,12 @@ class myBot(commands.Bot): #Being used as an event handler, but this class isn't
             return
         
         sniped[message.channel.id] = [
-            message.content, message.author, message.attachments, message.stickers,
-            message.channel.name, message.created_at
+            message.content, message.author, message.attachments, message.stickers, message.channel.name, message.created_at
         ]
 
   async def on_message_edit(self, before, after):
         sniped_edit[before.channel.id] = [
-    before.content,
-    before.author,
-    after.content,
-    before.channel.name,
-    before.created_at
+           before.content, before.author, after.content, before.channel.name, before.created_at
 ]
 
 
@@ -57,26 +52,34 @@ async def on_ready():
 
 @bot.tree.command(name="snipe", description="will snipe the last message deleted")
 async def snipe(interaction: discord.Interaction):
-    try:
-        contents, target, attch, stickers, channel, time = sniped[interaction.channel.id]
-    except KeyError:
-        return await interaction.response.send_message("Nothing to snipe")
+  try:
+    contents, target, attch, stickers, channel, time = sniped[
+      interaction.channel.id]
+  except KeyError:
+    return await interaction.response.send_message("Nothing to snipe")
 
-    snipe_em = discord.Embed(description=contents, color=discord.Color.blurple(), timestamp=time)
-    snipe_em.set_author(name=target.name, icon_url=target.display_avatar.url)
+  snipe_em = discord.Embed(description=contents, color=discord.Color.blurple(), timestamp=time)
+  snipe_em.set_author(name=target.name, icon_url=target.display_avatar.url)
 
-    if attch: # If an attachment is found (img/video) then it will adjust the embed accordingly.
-        if attch[0].proxy_url.endswith('mp4') or attch[0].proxy_url.endswith('mov'):
-            snipe_em.description += f"\nAttachment: {attch[0].proxy_url}"
-        else:
-            snipe_em.set_image(url=attch[0].proxy_url)
+  attachment_url = None
+  if attch:  # If an attachment is found (img/video) then it will adjust the embed accordingly.
+    attachment = attch[0]
+    if attachment.proxy_url.endswith(('mp4', 'mov')):
+      attachment_url = attachment.proxy_url
+      snipe_em.description += f"\n Video found! link posted below"
+    else:
+      snipe_em.set_image(url=attachment.proxy_url)
 
-    if stickers:
-      for sticker in stickers:
-        snipe_em.set_image(url=sticker.url) #sets the embed images as the stickers that was sent
+  if stickers:
+    for sticker in stickers:
+      snipe_em.set_image(url=sticker.url)  # sets the embed images as the stickers that were sent
 
-    snipe_em.set_footer(text=f"Deleted in {channel}")
-    await interaction.response.send_message(embed=snipe_em)  # Send embed with message content and author info
+  snipe_em.set_footer(text=f"Deleted in {channel}")
+  await interaction.response.send_message(
+    embed=snipe_em)  # Send embed with message content and author info
+
+  if attachment_url:
+    await interaction.channel.send(attachment_url)  # Send the video link separately (larger files won't embed but link will still be sent)
 
 
 @bot.tree.command(name="esnipe", description="will snipe the last message edited")
