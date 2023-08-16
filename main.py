@@ -63,7 +63,7 @@ async def snipe(interaction: discord.Interaction):
         return await interaction.response.send_message("Nothing to snipe")
 
     snipe_em = discord.Embed(description=contents, color=discord.Color.blurple(), timestamp=time)
-    snipe_em.set_author(name=target.display_name, icon_url=target.display_avatar.url)
+    snipe_em.set_author(name=target.name, icon_url=target.display_avatar.url)
 
     if attch: # If an attachment is found (img/video) then it will adjust the embed accordingly.
         if attch[0].proxy_url.endswith('mp4') or attch[0].proxy_url.endswith('mov'):
@@ -87,7 +87,7 @@ async def snipeedit(interaction: discord.Interaction):
         return await interaction.response.send_message("No recent edits found")
 
     snipe_embed = discord.Embed(color=discord.Color.blurple(), timestamp=time)
-    snipe_embed.set_author(name=author.display_name, icon_url=author.display_avatar.url)
+    snipe_embed.set_author(name=author.name, icon_url=author.display_avatar.url)
     snipe_embed.set_footer(text=f"Message edited in {channel}")
 
     # Add fields for original and edited content
