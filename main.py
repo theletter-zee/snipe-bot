@@ -24,9 +24,8 @@ class myBot(commands.Bot): #Being used as an event handler, but this class isn't
       print(f"Logged in as {bot.user} (Version: {discord.__version__}") #When the bot is online this function prints.
 
   async def on_message_delete(self, message):
-        # Ignore if the message was deleted by the bot itself
         if message.author == self.user:
-            return
+            return # Ignore if the message was deleted by the bot itself
         
         sniped[message.channel.id] = [
             message.content, message.author, message.attachments, message.stickers, message.channel.name, message.created_at
@@ -37,50 +36,45 @@ class myBot(commands.Bot): #Being used as an event handler, but this class isn't
            before.content, before.author, after.content, before.channel.name, before.created_at
 ]
 
-
 bot = myBot(command_prefix=prefix, intents=intents)
-
 
 @bot.event
 async def on_ready():
   print("Bot is up and ready!")
   try:
     synced = await bot.tree.sync()
-    print(f"Synced {len(synced)} command(s)")
+    print(f"Synced {len(synced)} command(s)") #prints how many commands the bot sees
   except Exception as e:
     print(e)   
 
 @bot.tree.command(name="snipe", description="will snipe the last message deleted")
 async def snipe(interaction: discord.Interaction):
   try:
-    contents, target, attch, stickers, channel, time = sniped[
-      interaction.channel.id]
+    contents, target, attch, stickers, channel, time = sniped[interaction.channel.id]
   except KeyError:
     return await interaction.response.send_message("Nothing to snipe")
 
-  snipe_em = discord.Embed(description=contents, color=discord.Color.blurple(), timestamp=time)
-  snipe_em.set_author(name=target.name, icon_url=target.display_avatar.url)
+  snipe_em = discord.Embed(description=contents, color=discord.Color.blurple(), timestamp=time) #this is the embeded message that the bot will send
+  snipe_em.set_author(name=target.name, icon_url=target.display_avatar.url) #change ".name" to "display_name" if you want the bot to show the name and not the discord @
 
   attachment_url = None
   if attch:  # If an attachment is found (img/video) then it will adjust the embed accordingly.
     attachment = attch[0]
     if attachment.proxy_url.endswith(('mp4', 'mov')):
       attachment_url = attachment.proxy_url
-      snipe_em.description += f"\n Video found! link posted below"
+      snipe_em.description += f"\n Video found! link posted below" #when a video is found it will send this message
     else:
       snipe_em.set_image(url=attachment.proxy_url)
 
   if stickers:
     for sticker in stickers:
-      snipe_em.set_image(url=sticker.url)  # sets the embed images as the stickers that were sent
+      snipe_em.set_image(url=sticker.url)  # sets the embed images as the sticker that was sent
 
   snipe_em.set_footer(text=f"Deleted in {channel}")
-  await interaction.response.send_message(
-    embed=snipe_em)  # Send embed with message content and author info
+  await interaction.response.send_message(embed=snipe_em)  # Send embed with message content and author info
 
   if attachment_url:
     await interaction.channel.send(attachment_url)  # Send the video link separately (larger files won't embed but link will still be sent)
-
 
 @bot.tree.command(name="esnipe", description="will snipe the last message edited")
 async def snipeedit(interaction: discord.Interaction):
