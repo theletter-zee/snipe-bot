@@ -21,7 +21,7 @@ sniped_edit = {}
 
 class myBot(commands.Bot): #Being used as an event handler, but this class isn't needed for the bot to work overall (You'd just have to make the necessary changes). It's just more organized.
   async def on_ready(self):
-      print(f"Logged in as {bot.user} (Version: {discord.__version__}") #When the bot is online this function prints.
+      print(f"Logged in as {bot.user} (Version: {discord.__version__})") #When the bot is online this function prints.
 
   async def on_message_delete(self, message):
         if message.author == self.user:
@@ -38,16 +38,13 @@ class myBot(commands.Bot): #Being used as an event handler, but this class isn't
 
 bot = myBot(command_prefix=prefix, intents=intents)
 
-@bot.event
-async def on_ready():
-  print("Bot is up and ready!")
-  try:
+@bot.command()
+@commands.is_owner()
+async def sync_cmds(ctx):
     synced = await bot.tree.sync()
-    print(f"Synced {len(synced)} command(s)") #prints how many commands the bot sees
-  except Exception as e:
-    print(e)   
+    print(f"Synced {len(synced)} command(s)") 
 
-@bot.tree.command(name="snipe", description="will snipe the last message deleted")
+@bot.tree.command(name="snipe", description="will send recently deleted message")
 async def snipe(interaction: discord.Interaction):
   try:
     contents, target, attch, stickers, channel, time = sniped[interaction.channel.id]
@@ -62,7 +59,6 @@ async def snipe(interaction: discord.Interaction):
     attachment = attch[0]
     if attachment.proxy_url.endswith(('mp4', 'mov')):
       attachment_url = attachment.proxy_url
-      snipe_em.description += f"\n Video found! link posted below" #when a video is found it will send this message
     else:
       snipe_em.set_image(url=attachment.proxy_url)
 
@@ -76,7 +72,7 @@ async def snipe(interaction: discord.Interaction):
   if attachment_url:
     await interaction.channel.send(attachment_url)  # Send the video link separately (larger files won't embed but link will still be sent)
 
-@bot.tree.command(name="esnipe", description="will snipe the last message edited")
+@bot.tree.command(name="esnipe", description="will send recently edited message")
 async def snipeedit(interaction: discord.Interaction):
     try:
         original, author, edited, channel, time = sniped_edit[interaction.channel.id]
